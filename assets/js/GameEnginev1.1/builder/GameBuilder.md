@@ -57,7 +57,7 @@ permalink: /gamebuilderv1-1
     (function(){
         try {
             const s = document.createElement('script');
-            s.src = "{{ site.baseurl }}@assets/js/GameEnginev1.1/builder/templates.js";
+            s.src = "{{ site.baseurl }}/assets/js/GameEnginev1.1/builder/templates.js";
             s.defer = true;
             document.head.appendChild(s);
         } catch (e) { console.error('GameTemplatesV1_1 loader failed; templates.js must be available', e); }
@@ -2573,6 +2573,7 @@ function generateStepCode(currentStep) {
 
         // Ensure absolute import URLs
         code = code.replace(/from\s+['"](\/?[^'\"]+)['"]/g, (match, importPath) => {
+            if (importPath.startsWith('@assets/')) return `from '${baseUrl}/assets/${importPath.slice('@assets/'.length)}'`;
             if (importPath.startsWith('/')) return `from '${baseUrl}${importPath}'`;
             if (!importPath.startsWith('http://') && !importPath.startsWith('https://')) {
                 return `from '${baseUrl}/${importPath}'`;
@@ -2590,7 +2591,7 @@ function generateStepCode(currentStep) {
             ui.gameContainer.id = 'gameContainer';
         }
 
-        const GameModule = await import(baseUrl + '@assets/js/GameEnginev1.1/essentials/Game.js');
+        const GameModule = await import(baseUrl + '/assets/js/GameEnginev1.1/essentials/Game.js');
         const Game = GameModule.default || GameModule.Core || GameModule;
 
         // Update env dimensions based on container
@@ -2624,8 +2625,6 @@ function generateStepCode(currentStep) {
                 innerWidth: envWidth || ui.gameCanvas.width || 800,
                 innerHeight: envHeight || ui.gameCanvas.height || 580,
                 disablePauseMenu: true,
-                pythonURI: baseUrl,
-                javaURI: baseUrl,
                 fetchOptions: { method: 'GET' }
             };
 
@@ -2710,7 +2709,7 @@ function generateStepCode(currentStep) {
         code = code.replace(/export\s+const\s+gameLevelClasses\s*=\s*\[\s*GameLevelCustom\s*\];?/g, `export default ${newClassName};`);
 
         // Header with usage instructions reflecting chosen name
-        const header = `// Adventure Game Custom Level\n// Exported from GameBuilder on ${(new Date()).toISOString()}\n// How to use this file:\n// 1) Save as assets/js/adventureGame/${newClassName}.js in your repo.\n// 2) Reference it in your runner or level selector. Examples:\n//    import GameLevelPlanets from '{{site.baseurl}}@assets/js/GameEnginev1.1/GameLevelPlanets.js';\n//    import ${newClassName} from '{{site.baseurl}}/assets/js/adventureGame/${newClassName}.js';\n//    export const gameLevelClasses = [GameLevelPlanets, ${newClassName}];\n//    // or pass it directly to your GameControl as the only level.\n// 3) Ensure images exist and paths resolve via 'path' provided by the engine.\n// 4) You can add more objects to this.classes inside the constructor.\n`;
+        const header = `// Adventure Game Custom Level\n// Exported from GameBuilder on ${(new Date()).toISOString()}\n// How to use this file:\n// 1) Save as assets/js/adventureGame/${newClassName}.js in your repo.\n// 2) Reference it in your runner or level selector. Examples:\n//    import GameLevelPlanets from '@assets/js/GameEnginev1.1/GameLevelPlanets.js';\n//    import ${newClassName} from '{{site.baseurl}}/assets/js/adventureGame/${newClassName}.js';\n//    export const gameLevelClasses = [GameLevelPlanets, ${newClassName}];\n//    // or pass it directly to your GameControl as the only level.\n// 3) Ensure images exist and paths resolve via 'path' provided by the engine.\n// 4) You can add more objects to this.classes inside the constructor.\n`;
         code = header + code;
 
         // Download using the chosen class name

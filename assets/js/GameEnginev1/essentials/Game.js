@@ -32,25 +32,36 @@ class Game {
     }
 
     initUser() {
+        // Skip user initialization if no backend URIs are configured (e.g., in gamebuilder embed mode)
+        if (!this.pythonURI || this.pythonURI === '') {
+            console.log('Skipping user initialization - no backend configured');
+            return;
+        }
+
         const pythonURL = this.pythonURI + '/api/id';
         fetch(pythonURL, this.fetchOptions)
             .then(response => {
                 if (response.status !== 200) {
-                    console.error("HTTP status code: " + response.status);
+                    console.warn("Could not fetch user ID (HTTP " + response.status + "), continuing without user data");
                     return null;
                 }
                 return response.json();
             })
             .then(data => {
-                if (!data) return;
+                if (!data) {
+                    console.log('No user data available, continuing game without user tracking');
+                    return;
+                }
                 this.uid = data.uid;
 
-                const javaURL = this.javaURI + '/rpg_answer/person/' + this.uid;
+                const javaURL = this.javaURI + '/api/person/uid/' + this.uid;
                 return fetch(javaURL, this.fetchOptions);
             })
             .then(response => {
-                if (!response || !response.ok) {
-                    throw new Error(`Spring server response: ${response?.status}`);
+                if (!response) return;
+                if (!response.ok) {
+                    console.warn(`Spring server unavailable (${response.status}), continuing without user data`);
+                    return null;
                 }
                 return response.json();
             })
@@ -59,7 +70,8 @@ class Game {
                 this.id = data.id;
             })
             .catch(error => {
-                console.error("Error:", error);
+                console.warn("User initialization failed (non-critical):", error.message);
+                // Don't stop the game - user tracking is optional
             });
     }
 }

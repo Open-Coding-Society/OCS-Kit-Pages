@@ -2663,8 +2663,6 @@ function generateStepCode(currentStep) {
                 innerWidth: envWidth || ui.gameCanvas.width || 800,
                 innerHeight: envHeight || ui.gameCanvas.height || 580,
                 disablePauseMenu: true,
-                pythonURI: baseUrl,
-                javaURI: baseUrl,
                 fetchOptions: { method: 'GET' }
             };
 

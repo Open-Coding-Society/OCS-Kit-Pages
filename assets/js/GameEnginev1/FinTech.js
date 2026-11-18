@@ -1901,7 +1901,7 @@ class FinTech extends Game {
                 if (!data) return;
                 this.uid = data.uid;
 
-                const javaURL = this.javaURI + '/rpg_answer/person/' + this.uid;
+                const javaURL = this.javaURI + '/api/person/uid/' + this.uid;
                 return fetch(javaURL, this.fetchOptions);
             })
             .then(response => {
