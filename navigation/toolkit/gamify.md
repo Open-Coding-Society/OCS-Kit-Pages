@@ -70,18 +70,22 @@ menu: nav/home.html
 {%- comment -%}
   Buttons point at game pages this website has (stock and casino simulations have no pages here).
   The Media Bias Game belongs to the examples feature and hides when that is off.
+  Fortune Finders belongs to the finance-sim feature and hides when that is off.
 {%- endcomment -%}
 <div class="toolkit-buttons">
   <div id="loadingElement" class="loading-container">
       <div class="spinner"></div>
   </div>  
-  <a href="{{site.baseurl}}/gamify/fortuneFindersv1-1" class="toolkit-button" data-description="An adventure game where you explore levels, talk to NPCs and answer CS questions to earn balance." data-authors="Author: NITD+People">
+  {%- include kit/url-feature.html url="/gamify/fortuneFindersv1-1" %}
+  {%- unless kit_off %}
+  <a href="{{site.baseurl}}/gamify/fortuneFindersv1-1" class="toolkit-button" data-feature="{{ kit_feature }}" data-description="An adventure game where you explore levels, talk to NPCs and answer CS questions to earn balance." data-authors="Author: NITD+People">
     <img src="{{site.baseurl}}/images/gamify/lessons/fortune.png" alt="Fortune Finders" />
     <span class="button-name">Fortune Finders</span>
     <div class="description">
       <p>Start at the airport, interact with NPCs and answer CS related questions to earn balance, then head to Wall Street.</p>
     </div>
   </a>
+  {%- endunless %}
   <a href="{{site.baseurl}}/gamify/water" class="toolkit-button" data-description="Learn the basics of JS and object oriented programming through hands on learning. Dive deep into the world of game coding in this underwater game where you can interact with different oceanic animals such as turtles, fishes, and more." data-authors="Author: Jane Smith">
     <img src="{{site.baseurl}}/images/gamify/lessons/shark.png" alt="RPG Game" />
     <span class="button-name">RPG Game</span>
