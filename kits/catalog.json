@@ -558,11 +558,13 @@
         "verify": "Open the finance pages and make a simulated trade."
       },
       "pages": [
+        "features/finance-sim/",
         "_layouts/finance.html",
         "_layouts/fortunefindersBank.html",
         "_layouts/fortunefindersCasino.html",
         "assets/css/marketEvents.css"
-      ]
+      ],
+      "notes": "Fortune Finders (features/finance-sim/) uses Spring's /api/rpg_answer endpoints for balance and quiz questions (mvc.fortuneFinders in OCS-Kit-Spring), so it needs finance-sim on in both backends."
     },
     "resume": {
       "name": "Resume builder",

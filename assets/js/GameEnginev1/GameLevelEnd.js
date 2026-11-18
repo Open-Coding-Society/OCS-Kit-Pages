@@ -867,7 +867,7 @@ class GameLevelEnd {
     }
     
     // Endpoint for updating balance
-    const endpoint = `${Game.javaURI}/rpg_answer/updateBalance/${personId}/${amount}`;
+    const endpoint = `${Game.javaURI}/api/rpg_answer/updateBalance/${personId}/${amount}`;
     
     // Send request to update balance
     fetch(endpoint, Game.fetchOptions)

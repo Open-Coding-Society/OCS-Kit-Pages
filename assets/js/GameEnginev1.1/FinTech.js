@@ -1,4 +1,4 @@
-import Game from './essentials/Game.js';
+import { GameCore } from './essentials/Game.js';
 import GameControl from './essentials/GameControl.js';
 import Quiz from './Quiz.js';
 import Inventory from "./Inventory.js";
@@ -41,8 +41,8 @@ class StatsManager {
     }
     async fetchStats(personId) {
         const endpoints = {
-            balance: this.game.javaURI + '/rpg_answer/getBalance/' + personId,
-            questionAccuracy: this.game.javaURI + '/rpg_answer/getQuestionAccuracy/' + personId
+            balance: this.game.javaURI + '/api/rpg_answer/getBalance/' + personId,
+            questionAccuracy: this.game.javaURI + '/api/rpg_answer/getQuestionAccuracy/' + personId
         };
     
         for (let [key, url] of Object.entries(endpoints)) {
@@ -113,7 +113,7 @@ class StatsManager {
 
     async updateStatsMCQ(questionId, choiceId, personId) {
         try {
-            const response = await fetch(this.game.javaURI + '/rpg_answer/submitMCQAnswer', {
+            const response = await fetch(this.game.javaURI + '/api/rpg_answer/submitMCQAnswer', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ questionId, personId, choiceId })
@@ -1840,7 +1840,7 @@ class QuizManager {
         try {
             const personId = this.game.id;
             const response = await fetch(
-                `${this.game.javaURI}/rpg_answer/getQuestion?category=${category}&personid=${personId}`, 
+                `${this.game.javaURI}/api/rpg_answer/getQuestion?category=${category}&personid=${personId}`, 
                 this.game.fetchOptions
             );
     
@@ -1873,7 +1873,7 @@ class QuizManager {
     }
 }
 
-class FinTech extends Game {
+class FinTech extends GameCore {
     constructor(environment) {
         super(environment);
         this.statsManager = new StatsManager(this);
@@ -1901,7 +1901,7 @@ class FinTech extends Game {
                 if (!data) return;
                 this.uid = data.uid;
 
-                const javaURL = this.javaURI + '/rpg_answer/person/' + this.uid;
+                const javaURL = this.javaURI + '/api/person/uid/' + this.uid;
                 return fetch(javaURL, this.fetchOptions);
             })
             .then(response => {
